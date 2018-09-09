@@ -110,6 +110,9 @@ You can then invoke CSVI as follows::
 
     bash-3.2$ csvi your/file.csv --config your/config.yaml
 
+Data visualization:
+To add data visualization to your reports, please add --chart option to your command
+
 Credits
 ---------
 

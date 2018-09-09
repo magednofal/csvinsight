@@ -368,7 +368,7 @@ def draw_chart(app,results,histogram,header):
         'textAlign': 'center',
         'color': colors['text']
     }))
-    print("trace: ", trace)
+    #print("trace: ", trace)
     layout = go.Layout(
     title = "Min/Max Values"
 )
