@@ -27,9 +27,12 @@ import yaml
 
 import plumbum
 import six
-
-from . import split
-from . import summarize
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+import split
+import summarize
+import plotly.graph_objs as go
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -223,6 +226,10 @@ For the list of available dialect parameters, see:
         '--ipynb',
         help='Write a Python notebook version of the report to this file'
     )
+    parser.add_argument(
+        '--chart',action='store_true',
+        help='Adds data visualization charts'
+        )
     args = parser.parse_args()
 
     logging.basicConfig(level=args.loglevel)
@@ -293,6 +300,11 @@ For the list of available dialect parameters, see:
             fout.write(ipynb.generate(report_as_json))
         ipynb.execute(args.ipynb, save_html=True)
 
+    if args.chart:
+
+        app = dash.Dash()
+
+        draw_chart(app,results,histogram,header)
     #
     # Reconcile differences between Py2 and Py3 here.
     # _print_report expects strings and writes strings.
@@ -310,6 +322,64 @@ For the list of available dialect parameters, see:
         fout = sys.stdout
 
     _print_report(header, histogram, results, fout=fout)
+
+def draw_chart(app,results,histogram,header):
+    app.title = "csvinsight"
+    app.css.config.serve_locally = True
+    app.scripts.config.serve_locally = True
+    chld = []
+    colors = {
+        'background': '#111111',
+        'text': '#7FDBFF'
+    }
+    chld.append(html.H1(
+            children='CSV Insight',
+            style={
+                'textAlign': 'center',
+                'color': colors['text']
+            }
+        ))
+    #trace0 = go.box()
+    chld.append(dcc.Graph(
+        id="graph1",
+        figure={
+            'data': [
+                { 'x' : header, 'y' : [row['num_values'] for row in results], 'type': 'bar', 'name': 'num_values'},
+                { 'x' : header, 'y' : [row['num_fills'] for row in results], 'type': 'bar', 'name': 'num_fills'},
+            ],
+            'layout': {
+                'plot_bgcolor': colors['background'],
+                'paper_bgcolor': colors['background'],
+                'font': {
+                    'color': colors['text']
+                }
+            }
+        }
+    ))
+
+    x = 0
+    trace=[]
+
+    for row in results:
+        trace.append(go.Box( y =[row['min_len'],row['max_len'] ] , name= header[x]  ,boxpoints = False,   marker = dict(
+        color = 'rgb(9,56,125)'),
+        line = dict(
+        color = 'rgb(9,56,125)')))
+        x = x + 1
+    chld.append(html.H1(children="Min/Max values", style={
+        'textAlign': 'center',
+        'color': colors['text']
+    }))
+    print("trace: ", trace)
+    layout = go.Layout(
+    title = "Min/Max Values"
+)
+    fig = go.Figure(data=trace,layout=layout)
+
+    chld.append(dcc.Graph(
+        id="graph2",   figure=fig, ))
+    app.layout = html.Div(style={'backgroundColor': colors['background']}, children=chld)
+    app.run_server(debug=True)
 
 
 def _open_for_reading(path, encoding='utf-8'):
@@ -539,7 +609,7 @@ def _concatenate_tables(tables, concatenate=_concatenate):
 
     Each table must contain the same number of columns for this to work.
 
-    Deletes the files from the individual tables after concatenating.
+    Deletes the files from the individualد tables after concatenating.
 
     :arg list tables: A list of tables.
     :returns: A table, as a list of concatenated columns.
