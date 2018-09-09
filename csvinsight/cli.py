@@ -362,9 +362,7 @@ def draw_chart(app,results,histogram,header):
 
     for row in results:
         trace.append(go.Box( y =[row['min_len'],row['max_len'] ] , name= header[x]  ,boxpoints = False,   marker = dict(
-        color = 'rgb(9,56,125)'),
-        line = dict(
-        color = 'rgb(9,56,125)')))
+        )))
         x = x + 1
     chld.append(html.H1(children="Min/Max values", style={
         'textAlign': 'center',
