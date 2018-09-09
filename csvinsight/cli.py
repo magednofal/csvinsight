@@ -371,7 +371,7 @@ def draw_chart(app,results,histogram,header):
             }
         }
     ))
-    chld.append(html.H1(children="Min / Max Values", style={
+    chld.append(html.H1(children="Min / Avg /Max Len Values", style={
         'textAlign': 'center',
         'color': colors['text']
     }))
@@ -379,7 +379,7 @@ def draw_chart(app,results,histogram,header):
     trace=[]
 
     for row in results:
-        trace.append(go.Box( y =[row['min_len'],row['max_len'] ] , name= header[x]  ,boxpoints = False, jitter = 0.1,  marker = dict(
+        trace.append(go.Box( y =[row['min_len'],row['avg_len'],row['max_len'] ] , name= header[x]  ,boxpoints = False, jitter = 0.1,  marker = dict(
         )))
         x = x + 1
 
