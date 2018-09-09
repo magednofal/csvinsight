@@ -1,3 +1,4 @@
+
 #
 # -*- coding: utf-8 -*-
 # (C) Copyright: Profound Networks, LLC 2017
@@ -339,6 +340,11 @@ def draw_chart(app,results,histogram,header):
                 'color': colors['text']
             }
         ))
+
+    chld.append(html.H1(children="Num Values/Num Fills", style={
+        'textAlign': 'center',
+        'color': colors['text']
+    }))
     #trace0 = go.box()
     chld.append(dcc.Graph(
         id="graph1",
@@ -352,27 +358,82 @@ def draw_chart(app,results,histogram,header):
                 'paper_bgcolor': colors['background'],
                 'font': {
                     'color': colors['text']
+                },
+            'yaxis': {
+                'color' : colors['text'],
+                'showgrid' : False,
+                'showline' : True,
+                },
+            'xaxis': {
+                'color' : colors['text'],
+                'showline' : False
                 }
             }
         }
     ))
-
+    chld.append(html.H1(children="Min / Max Values", style={
+        'textAlign': 'center',
+        'color': colors['text']
+    }))
     x = 0
     trace=[]
 
     for row in results:
-        trace.append(go.Box( y =[row['min_len'],row['max_len'] ] , name= header[x]  ,boxpoints = False,   marker = dict(
+        trace.append(go.Box( y =[row['min_len'],row['max_len'] ] , name= header[x]  ,boxpoints = False, jitter = 0.1,  marker = dict(
         )))
         x = x + 1
-    chld.append(html.H1(children="Min/Max values", style={
-        'textAlign': 'center',
-        'color': colors['text']
-    }))
+
     #print("trace: ", trace)
     layout = go.Layout(
-    title = "Min/Max Values"
+    title = "Min/Max Values",   yaxis=dict(
+        autorange=True,
+        showgrid=False,
+        zeroline=True,
+        dtick=1,
+        showline=True,
+        color= colors['text'],
+        #gridcolor='rgb(0, 0, 0)',
+        titlefont=dict(
+            family='Arial, sans-serif',
+            size=18,
+            color='yellow'
+        ),
+
+        gridcolor = colors['text'],
+        gridwidth=1,
+        zerolinecolor='rgb(0, 0, 0)',
+        zerolinewidth=2,
+    ),
+    xaxis=dict(
+        autorange=True,
+        showgrid=False,
+        zeroline=True,
+        dtick=1,
+        showline=True,
+        color= colors['text'],
+        #gridcolor='rgb(0, 0, 0)',
+        titlefont=dict(
+            family='Arial, sans-serif',
+            size=18,
+            color='yellow'
+        ),
+
+        gridcolor = colors['text'],
+        gridwidth=1,
+        zerolinecolor='rgb(0, 0, 0)',
+        zerolinewidth=2,
+    ),
+    margin=dict(
+        l=40,
+        r=30,
+        b=80,
+        t=100,
+    ),
+    font=dict(color = colors['text']),
+    plot_bgcolor= colors['background'],
+    paper_bgcolor= colors['background'],
 )
-    fig = go.Figure(data=trace,layout=layout)
+    fig = go.Figure(data=trace,layout=layout, )
 
     chld.append(dcc.Graph(
         id="graph2",   figure=fig, ))
