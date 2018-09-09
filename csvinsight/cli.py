@@ -385,7 +385,7 @@ def draw_chart(app,results,histogram,header):
 
     #print("trace: ", trace)
     layout = go.Layout(
-    title = "Min/Max Values",   yaxis=dict(
+       yaxis=dict(
         autorange=True,
         showgrid=False,
         zeroline=True,
