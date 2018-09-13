@@ -341,7 +341,7 @@ def draw_chart(app,results,histogram,header):
             }
         ))
 
-    chld.append(html.H1(children="Num Values/Num Fills", style={
+    chld.append(html.H1(children="Num Unique Values/Num Fills", style={
         'textAlign': 'center',
         'color': colors['text']
     }))
@@ -384,7 +384,7 @@ def draw_chart(app,results,histogram,header):
         x = x + 1
 
     #print("trace: ", trace)
-    layout = go.Layout(
+    layout1 = go.Layout(
        yaxis=dict(
         autorange=True,
         showgrid=False,
@@ -415,7 +415,7 @@ def draw_chart(app,results,histogram,header):
         titlefont=dict(
             family='Arial, sans-serif',
             size=18,
-            color='yellow'
+        #    color='yellow'
         ),
 
         gridcolor = colors['text'],
@@ -433,10 +433,56 @@ def draw_chart(app,results,histogram,header):
     plot_bgcolor= colors['background'],
     paper_bgcolor= colors['background'],
 )
-    fig = go.Figure(data=trace,layout=layout, )
+    fig = go.Figure(data=trace,layout=layout1, )
 
-    chld.append(dcc.Graph(
-        id="graph2",   figure=fig, ))
+    chld.append(dcc.Graph(id="graph2",   figure=fig, ))
+    chld.append(html.H1(children="Top 20 Unique Values", style={
+        'textAlign': 'center',
+        'color': colors['text']
+    }))
+
+    for (h,row) in zip(header,results):
+        vals = []
+        lbls =[]
+        for col in row['most_common']:
+            vals.append(col[0])
+            lbls.append(col[1])
+        fig2 = {
+          "data": [
+            {
+              #"values": [col[0] in row['most_common']],
+              #"values": [row['most_common'][0] in row['most_common']],
+              "values": vals,
+              #"values": [row['most_common'][0] for row in results],
+              "labels": lbls,
+              "domain": {"x": [0, .48]},
+              "name": h,
+              "hoverinfo":"label+percent+name+value",
+              "hole": .4,
+              "type": "pie"
+            },
+            ],
+          "layout": {
+                'plot_bgcolor': colors['background'],
+                'paper_bgcolor': colors['background'],
+                "annotations": [
+                    {
+                        'plot_bgcolor': colors['background'],
+                        'paper_bgcolor': colors['background'],
+                        "font": {
+                            "size": 20,
+                            'color': colors['text'],
+                        },
+                        "showarrow": False,
+                        "text": h,
+                        "x": 0.4,
+                        "y": 0.5
+                    },
+
+                ]
+            }
+        }
+        chld.append(dcc.Graph(id=h,   figure=fig2, ))
     app.layout = html.Div(style={'backgroundColor': colors['background']}, children=chld)
     app.run_server(debug=True)
 
