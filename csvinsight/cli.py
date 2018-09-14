@@ -459,26 +459,42 @@ def draw_chart(app,results,histogram,header):
               "name": h,
               "hoverinfo":"label+percent+name+value",
               "hole": .4,
-              "type": "pie"
+              "type": "pie",
+
             },
             ],
           "layout": {
                 'plot_bgcolor': colors['background'],
                 'paper_bgcolor': colors['background'],
-                "annotations": [
+                'color': colors['text'],
+                'font': {
+                                        "size": 20,
+                                        'color': colors['text'],
+                                    },
+                'annotations': [
                     {
                         'plot_bgcolor': colors['background'],
                         'paper_bgcolor': colors['background'],
-                        "font": {
+                        'font': {
                             "size": 20,
                             'color': colors['text'],
                         },
                         "showarrow": False,
+                        'color': colors['text'],
                         "text": h,
                         "x": 0.4,
                         "y": 0.5
                     },
-
+                    ],
+                'legend': [
+                {
+                    'x': 0.2,
+                    'y': 1,
+                    'font': {
+                        'size': 13,
+                        'color': colors['text'],
+                    },
+                }
                 ]
             }
         }
