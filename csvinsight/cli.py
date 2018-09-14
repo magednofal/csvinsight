@@ -468,7 +468,7 @@ def draw_chart(app,results,histogram,header):
                 'paper_bgcolor': colors['background'],
                 'color': colors['text'],
                 'font': {
-                                        "size": 20,
+                                        "size": 12,
                                         'color': colors['text'],
                                     },
                 'annotations': [
