@@ -33,6 +33,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import split
 import summarize
+import pandas as pd
 import plotly.graph_objs as go
 
 _LOGGER = logging.getLogger(__name__)
@@ -351,6 +352,7 @@ def draw_chart(app,results,histogram,header):
         figure={
             'data': [
                 { 'x' : header, 'y' : [row['num_values'] for row in results], 'type': 'bar', 'name': 'num_values'},
+                { 'x' : header, 'y' : [row['num_uniques'] for row in results], 'type': 'bar', 'name': 'num_uniques'},
                 { 'x' : header, 'y' : [row['num_fills'] for row in results], 'type': 'bar', 'name': 'num_fills'},
             ],
             'layout': {
@@ -468,9 +470,9 @@ def draw_chart(app,results,histogram,header):
                 'paper_bgcolor': colors['background'],
                 'color': colors['text'],
                 'font': {
-                                        "size": 12,
-                                        'color': colors['text'],
-                                    },
+                            "size": 12,
+                            'color': colors['text'],
+                        },
                 'annotations': [
                     {
                         'plot_bgcolor': colors['background'],
@@ -499,6 +501,8 @@ def draw_chart(app,results,histogram,header):
             }
         }
         chld.append(dcc.Graph(id=h,   figure=fig2, ))
+
+
     app.layout = html.Div(style={'backgroundColor': colors['background']}, children=chld)
     app.run_server(debug=True)
 
