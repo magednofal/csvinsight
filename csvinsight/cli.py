@@ -482,7 +482,7 @@ def draw_chart(app,results,histogram,header):
                         "showarrow": False,
                         'color': colors['text'],
                         "text": h,
-                        "x": 0.4,
+                        "x": 0.6,
                         "y": 0.5
                     },
                     ],
