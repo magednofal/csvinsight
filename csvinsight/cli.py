@@ -342,18 +342,18 @@ def draw_chart(app,results,histogram,header):
             }
         ))
 
-    chld.append(html.H1(children="Num Unique Values/Num Fills", style={
+    chld.append(html.H1(children="Number of values/Number of  unique Values/Number of fills", style={
         'textAlign': 'center',
         'color': colors['text']
     }))
-    #trace0 = go.box()
+
     chld.append(dcc.Graph(
         id="graph1",
         figure={
             'data': [
-                { 'x' : header, 'y' : [row['num_values'] for row in results], 'type': 'bar', 'name': 'num_values'},
-                { 'x' : header, 'y' : [row['num_uniques'] for row in results], 'type': 'bar', 'name': 'num_uniques'},
-                { 'x' : header, 'y' : [row['num_fills'] for row in results], 'type': 'bar', 'name': 'num_fills'},
+                { 'x' : header, 'y' : [row['num_values'] for row in results], 'type': 'bar', 'name': 'Number of values'},
+                { 'x' : header, 'y' : [row['num_uniques'] for row in results], 'type': 'bar', 'name': 'Number of uniques'},
+                { 'x' : header, 'y' : [row['num_fills'] for row in results], 'type': 'bar', 'name': 'Number of fills'},
             ],
             'layout': {
                 'plot_bgcolor': colors['background'],
