@@ -462,7 +462,6 @@ def draw_chart(app,results,histogram,header):
               "hoverinfo":"label+percent+name+value",
               "hole": .4,
               "type": "pie",
-
             },
             ],
           "layout": {
