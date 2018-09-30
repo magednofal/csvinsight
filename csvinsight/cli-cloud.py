@@ -170,6 +170,7 @@ def _override_config(fin, args):
     config = yaml.load(fin)
     args.list_separator = config.get('list_separator', args.list_separator)
     args.list_fields = config.get('list_fields', args.list_fields)
+    args.dialect = config.get('dialect',args.dialect)
 
     #
     # By inserting at the start of the list, we allow command-line arguments
@@ -315,7 +316,7 @@ For the list of available dialect parameters, see:
 
 #        app = dash.Dash()
 
-        print ("header",header)
+        #print ("header",header)
         return(draw_chart(app,results,histogram,header))
     #
     # Reconcile differences between Py2 and Py3 here.
@@ -524,7 +525,7 @@ def draw_chart(app,results,histogram,header):
     #app.run_server(debug=True)
 
 def serve_layout():
-    print("serve_layout")
+    #print("serve_layout")
     return main()
     #return html.H1('The time is: ' + str(datetime.datetime.now()))
 
