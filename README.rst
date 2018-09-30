@@ -111,7 +111,7 @@ You can then invoke CSVI as follows::
     bash-3.2$ csvi your/file.csv --config your/config.yaml
 
 Data visualization:
-To add data visualization to your reports, please add --chart option to your command
+To add data visualization to your reports, please add --chart option to your command then open browser in http://127.0.0.1:8050/
 
 Cloud version:
 To run cloud version, first run python cli-cloud.py "path to charting.csv\charting.csv" --chart --config "path to config file\config.yaml"
