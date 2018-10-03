@@ -117,7 +117,7 @@ Cloud version:
 To run cloud version, first run python cli-cloud.py "path to charting.csv\charting.csv" --chart --config "path to config file\config.yaml"
 This will make the charting server run on port 8050.
 Then run 'python Loader.py', it will run the upload tool on port 8888.
-Upload a csv file and the corresponding yaml configuration file (they will be saved on the server as charting.csv and config.yaml) Then click on 'click to chart'
+Upload a csv file and the corresponding yaml configuration file (they will be saved on the server as charting.csv and config.yaml at (your drive)\project\app_uploaded_files folder) Then click on 'click to chart'
 it will open another page/server that runs on port 8050 and will show the charts for the uploaded files (which is saved as charting.csv)
 
 
