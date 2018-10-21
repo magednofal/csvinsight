@@ -8,7 +8,8 @@
 from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
-
+from urllib.parse import quote as urlquote
+from urllib.parse import unquote
 import datetime
 import argparse
 import csv
@@ -18,6 +19,7 @@ import distutils.spawn
 import functools
 import gzip
 import json
+import urllib
 import logging
 import multiprocessing
 import os
@@ -26,7 +28,7 @@ import subprocess
 import sys
 import tempfile
 import yaml
-
+from flask import Flask, request, render_template
 import plumbum
 import six
 import dash
@@ -44,13 +46,21 @@ try:
 except ImportError:
     _LOGGER.warning('ipynb support is disabled')
 
+DOWNLOAD_DIR = "E:\\project\\app_uploaded_files\\"
+datafile_location = ""
+configfile_location = ""
 
 _GZIP_MAGIC = b'\x1f\x8b'
 _MAX_ARGS = 100
 """The max number of arguments to pass to a single subprocess call."""
 
 _LINES_PER_PART = 100000
-app = dash.Dash()
+#app = dash.Dash()
+app = dash.Dash(meta_tags=[
+    {
+        'http-equiv': 'refresh',
+        'content': '60'
+    }])
 idcount1 = 0
 
 
@@ -112,6 +122,7 @@ def _print_column_summary(summary, fout):
             ), file=fout
         )
     print('', file=fout)
+
 
 
 def _run_in_memory(reader, args):
@@ -199,6 +210,7 @@ For the list of available dialect parameters, see:
 
     https://docs.python.org/2/library/csv.html#dialects-and-formatting-parameters
     """
+    global datafile_location,configfile_location
     parser = argparse.ArgumentParser(
         description=description, formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=epilog
@@ -242,6 +254,12 @@ For the list of available dialect parameters, see:
         help='Adds data visualization charts'
         )
     args = parser.parse_args()
+    if(datafile_location!=""):
+        args.path = datafile_location
+        print("main_datafile_location",datafile_location)
+    if(configfile_location!=""):
+        args.config = configfile_location
+        print("main_configfile_location",configfile_location)
 
     logging.basicConfig(level=args.loglevel)
     tempfile.tempdir = args.tempdir
@@ -352,14 +370,18 @@ def draw_chart(app,results,histogram,header):
     id2 = "graph2" + str(idcount1)
 
     chld.append(html.H1(
+            id='CSVTitle',
             children='CSV Insight',
             style={
                 'textAlign': 'center',
                 'color': colors['text']
-            }
+            },
         ))
+    chld.append(dcc.Location(id='url', refresh=True)),
 
-    chld.append(html.H1(children="Number of values/Number of  unique Values/Number of fills", style={
+    chld.append(html.Div(id='page-content')),
+
+    chld.append(html.H1(children="Number of values/Number of unique Values/Number of fills", style={
         'textAlign': 'center',
         'color': colors['text']
     }))
@@ -389,6 +411,7 @@ def draw_chart(app,results,histogram,header):
                 }
             }
         }
+
     ))
     chld.append(html.H1(children="Min / Avg /Max Len Values", style={
         'textAlign': 'center',
@@ -520,14 +543,15 @@ def draw_chart(app,results,histogram,header):
     return html.Div(style={'backgroundColor': colors['background']}, children=chld)
 
 
-    #app.layout = html.Div(style={'backgroundColor': colors['background']}, children=chld)
-    #app.layout = serve_layout()
-    #app.run_server(debug=True)
+
 
 def serve_layout():
     #print("serve_layout")
+
     return main()
     #return html.H1('The time is: ' + str(datetime.datetime.now()))
+
+
 
 
 
@@ -779,6 +803,42 @@ def _concatenate_tables(tables, concatenate=_concatenate):
 
 app.layout = serve_layout
 #app.run_server(debug=True)
+
+
+@app.callback(dash.dependencies.Output('page-content', 'children'),
+              #[dash.dependencies.State('data', 'children')],
+              [dash.dependencies.Input('url', 'pathname')])
+def display_page(pathname):
+    pathname = str(pathname)
+    global datafile_location, configfile_location
+    #print("request.args['filename']:", request.args['filename'])
+
+    #print("data:",data)
+    if pathname.startswith('/'):
+        g_filename = pathname.split('/')[-1]
+        params = g_filename.split('&')
+        filename_param = params[0].split('=')
+        filename = filename_param[1]
+        print("filename",filename)
+        config_param = params[1].split('=')
+        config_file = config_param[1]
+        print("config_file",config_file)
+
+        # location = "/download/{}".format(unquote(filename))
+        # config_location = "/download/{}".format(unquote(config_file))
+        datafile_location = DOWNLOAD_DIR + filename
+        configfile_location = DOWNLOAD_DIR + config_file
+        # Parameterize the layout to set an initial value of the dropdown
+        #app.layout = serve_layout
+        app.layout = serve_layout
+        #return html.H1("test")
+        #return main()
+        print("datafile_location:", datafile_location)
+        print("configfile_location",configfile_location)
+
+        return
+    else:
+        return '404'
 
 if __name__ == "__main__":
     #main()
