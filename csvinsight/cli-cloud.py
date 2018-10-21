@@ -377,6 +377,14 @@ def draw_chart(app,results,histogram,header):
                 'color': colors['text']
             },
         ))
+    chld.append(html.H2(
+            id='warning',
+            children='If the old data is shown, not the newly uploaded one then please wait one minute',
+            style={
+                'textAlign': 'center',
+                'color': 'red'
+            },
+        ))
     chld.append(dcc.Location(id='url', refresh=True)),
 
     chld.append(html.Div(id='page-content')),
