@@ -444,7 +444,7 @@ def draw_chart(app,results,histogram,header):
         #gridcolor='rgb(0, 0, 0)',
         titlefont=dict(
             family='Arial, sans-serif',
-            size=18,
+            size=8,
             color='yellow'
         ),
 
