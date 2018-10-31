@@ -59,7 +59,7 @@ _LINES_PER_PART = 100000
 app = dash.Dash(meta_tags=[
     {
         'http-equiv': 'refresh',
-        'content': '60'
+        'content': '120'
     }])
 idcount1 = 0
 
@@ -379,7 +379,7 @@ def draw_chart(app,results,histogram,header):
         ))
     chld.append(html.H2(
             id='warning',
-            children='If the old data is shown, not the newly uploaded one then please wait one minute',
+            children='If the old data is shown, not the newly uploaded one then please wait two minutes or click on page refresh',
             style={
                 'textAlign': 'center',
                 'color': 'red'
@@ -419,7 +419,6 @@ def draw_chart(app,results,histogram,header):
                 }
             }
         }
-
     ))
     chld.append(html.H1(children="Min / Avg /Max Len Values", style={
         'textAlign': 'center',
@@ -464,7 +463,7 @@ def draw_chart(app,results,histogram,header):
         #gridcolor='rgb(0, 0, 0)',
         titlefont=dict(
             family='Arial, sans-serif',
-            size=18,
+            size=12,
         #    color='yellow'
         ),
 
@@ -525,7 +524,7 @@ def draw_chart(app,results,histogram,header):
                         'plot_bgcolor': colors['background'],
                         'paper_bgcolor': colors['background'],
                         'font': {
-                            "size": 20,
+                            "size": 12,
                             'color': colors['text'],
                         },
                         "showarrow": False,
